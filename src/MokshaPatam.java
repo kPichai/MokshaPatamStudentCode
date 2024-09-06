@@ -21,70 +21,61 @@ public class MokshaPatam {
         Queue<Integer> spacesToExplore = new LinkedList<Integer>();
         boolean[] visited = new boolean[boardsize];
         int curSpace = 1;
+        visited[0] = true;
         spacesToExplore.add(curSpace);
 
         int[] spaces = new int[boardsize];
-        for (int i = 0; i < boardsize; i++) {
-            for (int[] ladder : ladders) {
-                if (ladder[0] == i + 1) {
-                    spaces[i] = ladder[1];
-                } else {
-                    spaces[i] = i + 1;
-                }
-                System.out.println(ladder[0]);
-            }
 
-            for (int[] snake : snakes) {
-                if (snake[0] == i) {
-                    spaces[i] = snake[1];
-                } else {
-                    spaces[i] = i + 1;
-                }
-            }
+        for (int i = 1; i <= boardsize; i++) {
+            spaces[i-1] = i;
         }
 
-        for (int i : spaces) {
-            System.out.println(i);
+        for (int[] arr : ladders) {
+            spaces[arr[0] - 1] = arr[1];
         }
 
-//        while (!spacesToExplore.isEmpty()) {
-//            for (int i = 0; i < ladders.length; i++) {
-//                if (curSpace + 6 >= ladders[i][0] && curSpace + 1 <= ladders[i][0]) {
-//                    spacesToExplore.add();
-//                }
-//            }
-//            for (int i = 0; i < snakes.length; i++) {
-//                if (curSpace + 6 >= snakes[i][0] && curSpace + 1 <= snakes[i][0]) {
-//                    spacesToExplore.add();
-//                }
-//            }
+        for (int[] arr : snakes) {
+            spaces[arr[0] - 1] = arr[1];
+        }
+
+
+//        for (int i : spaces) {
+//            System.out.println(i);
+//        }
+
+        while (!spacesToExplore.isEmpty()) {
+            for (int i = 1; i <= 6; i++) {
+                if (curSpace >= boardsize - 6) {
+                    return 1;
+                } else if (!visited[curSpace + i - 1]) {
+                    spacesToExplore.add(curSpace + i);
+                }
+            }
+
+            curSpace = spaces[spacesToExplore.remove() - 1];
+        }
+
+        return -1;
+
+//        System.out.println(boardsize);
 //
-//            if (curSpace == boardsize) {
-//                return 1;
+//        System.out.println("\n");
+//
+//        for (int i = 0; i < ladders.length; i++) {
+//            for (int j = 0; j < ladders[i].length; j++) {
+//                System.out.print(ladders[i][j] + " ");
 //            }
+//            System.out.println();
 //        }
 //
+//        System.out.println("\n");
+//
+//        for (int i = 0; i < snakes.length; i++) {
+//            for (int j = 0; j < snakes[i].length; j++) {
+//                System.out.print(snakes[i][j] + " ");
+//            }
+//            System.out.println();
+//        }
 //        return -1;
-
-        System.out.println(boardsize);
-
-        System.out.println("\n");
-
-        for (int i = 0; i < ladders.length; i++) {
-            for (int j = 0; j < ladders[i].length; j++) {
-                System.out.print(ladders[i][j] + " ");
-            }
-            System.out.println();
-        }
-
-        System.out.println("\n");
-
-        for (int i = 0; i < snakes.length; i++) {
-            for (int j = 0; j < snakes[i].length; j++) {
-                System.out.print(snakes[i][j] + " ");
-            }
-            System.out.println();
-        }
-        return -1;
     }
 }
