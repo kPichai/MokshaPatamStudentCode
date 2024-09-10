@@ -19,40 +19,48 @@ public class MokshaPatam {
      */
     public static int fewestMoves(int boardsize, int[][] ladders, int[][] snakes) {
         Queue<Integer> spacesToExplore = new LinkedList<Integer>();
-        boolean[] visited = new boolean[boardsize];
+        boolean[] visited = new boolean[boardsize + 1];
+        int[] moves = new int[boardsize + 1];
         int curSpace = 1;
-        visited[0] = true;
+        visited[1] = true;
         spacesToExplore.add(curSpace);
 
-        int[] spaces = new int[boardsize];
-
-        for (int i = 1; i <= boardsize; i++) {
-            spaces[i-1] = i;
-        }
+        int[] spaces = new int[boardsize + 1];
 
         for (int[] arr : ladders) {
-            spaces[arr[0] - 1] = arr[1];
+            spaces[arr[0]] = arr[1];
         }
 
         for (int[] arr : snakes) {
-            spaces[arr[0] - 1] = arr[1];
+            spaces[arr[0]] = arr[1];
         }
 
-
-//        for (int i : spaces) {
-//            System.out.println(i);
-//        }
-
         while (!spacesToExplore.isEmpty()) {
+
+            curSpace = spacesToExplore.remove();
+
+            if (curSpace + 6 >= boardsize) {
+                if (curSpace == boardsize) {
+                    return moves[curSpace];
+                }
+                return moves[curSpace] + 1;
+            }
+
             for (int i = 1; i <= 6; i++) {
-                if (curSpace >= boardsize - 6) {
-                    return 1;
-                } else if (!visited[curSpace + i - 1]) {
-                    spacesToExplore.add(curSpace + i);
+                if (!visited[curSpace + i]) {
+                    if (spaces[curSpace + i] != 0) {
+                        spacesToExplore.add(spaces[curSpace + i]);
+                        moves[spaces[curSpace + i]] = moves[curSpace] + 1;
+                    } else {
+                        spacesToExplore.add(curSpace + i);
+                        moves[curSpace + i] = moves[curSpace] + 1;
+                    }
+
+                    visited[curSpace + i] = true;
                 }
             }
 
-            curSpace = spaces[spacesToExplore.remove() - 1];
+
         }
 
         return -1;
